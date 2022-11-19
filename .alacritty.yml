@@ -1,4 +1,6 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
+
+# allow true color in tmux for editor themes
 env:
   TERM: xterm-256color
 
