@@ -10,6 +10,11 @@
 
 (set-face-attribute 'default nil :height 130) ; bigger font
 
+(load "/home/garlic/quicklisp/clhs-use-local.el" t)
+
+
+;; golang stuff
+(add-hook 'before-save-hook #'gofmt-before-save)
 
 
 ;; random functions
@@ -29,7 +34,9 @@
 
 
 ;; choose a random theme at startup and expose functions for switching
-(let ((known-themes '(doom-rouge
+(let ((start-theme 'modus-vivendi)
+
+      (known-themes '(doom-rouge
                       doom-palenight
                       doom-monokai-spectrum
                       doom-1337
@@ -53,11 +60,13 @@
 
   (defun get-current-theme () (interactive) (print current-theme))
 
+  (defun set-theme (theme)
+    (load-theme theme t)
+    (setq current-theme theme))
+
   (defun random-theme+ (themes)
     "set random theme from set"
-    (let ((new-theme (random-el (remove current-theme themes))))
-      (load-theme new-theme t)
-      (setq current-theme new-theme)))  ;
+    (set-theme (random-el (remove current-theme themes))))
 
   (defun random-theme ()
     "choose a random theme from all available themes"
@@ -74,7 +83,7 @@
     (interactive)
     (random-theme+ light-themes))
 
-  (random-known-theme))
+  (set-theme start-theme))
 
 
 
@@ -96,6 +105,7 @@
 
 ;; personal key bindings
 (map! :leader (:prefix ("d" . "garlic")
+               :desc "sly eval print sexpr" "e" #'evil-collection-sly-eval-print-last-expression
                :desc "toggle transprency" "t" #'toggle-transparency
                :desc "random known theme" "r" #'random-known-theme
                :desc "random light theme" "l" #'random-light-theme
