@@ -1,25 +1,39 @@
-#
-# ~/.bashrc
-#
+# .bashrc
 
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+# source global definitions
+if [ -f /etc/bashrc ]; then . /etc/bashrc; fi
 
-alias ports='ss -ltnp'
-alias emacs='emacsclient -c -a=edit'
-alias doom='~/.emacs.d/bin/doom'
-alias lisp='rlwrap sbcl'
-alias clojure='rlwrap clojure'
-alias ls='ls --color=auto'
-alias edit='hx'
-alias compose="sudo docker-compose"
-alias zip="tar -zcvf" # archive, dir
-alias unzip="tar -zxvf" # archive
-alias keygen="cat /dev/urandom | tr -dc 'a-zA-Z0-9'" # alphanum hose
+# vi mode
+set -o vi
 
-export PATH=~/scripts:~/go/bin:~/.roswell/bin:$PATH
+# pretty prompt
+PS1='\n\u@\h (\w)\n~> '
+PS2=' > '
 
-PS1='[\u@\h \W]\$ '
+# command history
+hist () {
+    if [ "$#" -eq 1 ]; then
+	    history | cut -c 8- | grep $1;
+    else
+	    history | cut -c 8-;
+    fi
+}
 
-[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
-. "$HOME/.cargo/env"
+# add to $PATH without dupes
+add_path () {
+    if [[ ":$PATH:" != *":$1:"* ]]; then
+        export PATH="$PATH:$1"
+    fi
+}
+
+# common aliases
+alias keygen='cat /dev/urandom | tr -dc "a-zA-Z0-9"' # alphanum hose
+alias ports='ss -lntp'                               # show open ports
+alias path='echo $PATH | tr ":" "\n"'                # pretty path
+
+# custom path
+add_path "$HOME/.qlot/bin"
+add_path "$HOME/.local/bin"
+add_path "$HOME/.cargo/bin"
+add_path "$HOME/.mix/escripts"
+add_path "$HOME/.config/emacs/bin"
