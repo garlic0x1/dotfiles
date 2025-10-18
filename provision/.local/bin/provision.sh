@@ -18,7 +18,7 @@ detect_os() {
         echo "ARCH"
     else
         echo "UNKNOWN"
-    FI
+    fi
 }
 
 install_packages_fedora() {
