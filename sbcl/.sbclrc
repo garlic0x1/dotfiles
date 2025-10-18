@@ -1,5 +1,7 @@
 ; -*- mode: Lisp;-*-
 
+(require 'asdf)
+
 (asdf:initialize-source-registry
  `(:source-registry
    (:tree "~/git/")
@@ -15,7 +17,7 @@
 
 (defun install-quicklisp ()
   (load "~/.quicklisp.lisp") 
-  (quicklisp-quickstart:install))
+  (uiop:symbol-call '#:quicklisp-quickstart '#:install))
 
 #-quicklisp
 (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname))))
