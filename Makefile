@@ -1,10 +1,15 @@
-base:
-	stow emacs -v
-	stow sbcl
-	stow tmux
-	stow zsh
-	stow x11 -v
+UNAME := $(shell uname)
+PACKAGES := emacs zsh tmux x11 sbcl provision fonts
+
+stow:
+	stow $(PACKAGES) -v
+
+unstow:
+	stow -D $(PACKAGES) -v
 
 clean:
 	find . -type f -name '*.fasl' -delete
 	find . -type f -name '*~' -delete
+
+tree:
+	tree --gitignore -a -I .git
