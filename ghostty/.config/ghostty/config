@@ -1,0 +1,9 @@
+font-family="SF Mono Regular"
+font-family-bold="SF Mono Bold"
+font-family-italic="SF Mono Regular Italic"
+font-family-bold-italic="SF Mono bold Italic"
+font-size=16
+
+window-padding-x=4
+
+theme=light:modus-operandi-tinted,dark:modus-vivendi-tinted

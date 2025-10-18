@@ -1,5 +1,5 @@
 UNAME := $(shell uname)
-PACKAGES := emacs zsh tmux x11 sbcl provision fonts
+PACKAGES := emacs zsh tmux x11 sbcl provision fonts ghostty
 
 stow:
 	stow $(PACKAGES) -v
