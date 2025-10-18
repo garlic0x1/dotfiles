@@ -5,7 +5,7 @@ set -e
 FEDORA_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-devel gcc make cmake tree"
 ARCH_PKGS="stow git github-cli sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree"
 UBUNTU_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-dev gcc make cmake tree"
-MACOS_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree"
+MACOS_PKGS="stow gh sbcl tmux wget"
 
 detect_os() {
     if [ "$(uname)" = "Darwin" ]; then
@@ -61,14 +61,22 @@ install_packages() {
     install_packages_curl
 }
 
+extras_linux() {
+    gsettings set \
+        org.gnome.desktop.input-sources xkb-options \
+	"['caps:ctrl_modifier', 'altwin:swap_alt_win']" \
+	|| \
+	echo "Could not configure keyboard, not using Gnome?"
+}
+
 extras_macos() {
-    cp -L ~/.fonts/* ~/Library/Fonts/
+    cp fonts/.fonts/* ~/Library/Fonts || cp -L ~/.fonts/* ~/Library/Fonts/
 }
 
 extras() {
     case "$(detect_os)" in
-        MACOS)  extras_macos  ;;
-        *)      echo "Unsupported OS."; exit 1 ;;
+        MACOS)  extras_macos ;;
+        *)      extras_linux ;;
     esac
 }
 

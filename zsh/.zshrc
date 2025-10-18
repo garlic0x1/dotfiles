@@ -5,6 +5,7 @@ SAVEHIST=10000
 zstyle :compinstall filename '$HOME/.zshrc'
 autoload -Uz compinit
 compinit
+setopt globdots
 
 bindkey -e
 
