@@ -4,7 +4,7 @@ set -e
 
 FEDORA_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-devel gcc make cmake tree ghostty nvim"
 ARCH_PKGS="stow git github-cli sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree ghostty nvim"
-UBUNTU_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-dev gcc make cmake tree nvim"
+UBUNTU_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-dev gcc make cmake tree neovim"
 MACOS_PKGS="stow gh sbcl tmux wget nvim"
 
 detect_os() {
@@ -36,7 +36,10 @@ install_packages_ubuntu() {
     sudo apt update -y
     sudo apt install -y $UBUNTU_PKGS
     wget https://github.com/mkasberg/ghostty-ubuntu/releases/download/1.2.2-0-ppa1/ghostty_1.2.2-0.ppa1_amd64_24.04.deb
-    sudo apt install -y ghostty_1.2.2-0.ppa1_amd64_24.04.deb
+    sudo apt install -y ./ghostty_1.2.2-0.ppa1_amd64_24.04.deb \
+        || rm ./ghostty_1.2.2-0.ppa1_amd64_24.04.deb \
+        || true
+    rm ./ghostty_1.2.2-0.ppa1_amd64_24.04.deb || true
 }
 
 install_packages_macos() {
@@ -67,9 +70,8 @@ install_packages() {
 extras_linux() {
     gsettings set \
         org.gnome.desktop.input-sources xkb-options \
-	"['caps:ctrl_modifier', 'altwin:swap_alt_win']" \
-	|| \
-	echo "Could not configure keyboard, not using Gnome?"
+        "['caps:ctrl_modifier', 'altwin:swap_alt_win']" \
+        || echo "Could not configure keyboard, not using Gnome?"
 }
 
 extras_macos() {
