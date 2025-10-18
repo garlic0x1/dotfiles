@@ -2,8 +2,8 @@
 
 set -e
 
-FEDORA_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-devel gcc make cmake tree"
-ARCH_PKGS="stow git github-cli sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree"
+FEDORA_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-devel gcc make cmake tree ghostty"
+ARCH_PKGS="stow git github-cli sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree ghostty"
 UBUNTU_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-dev gcc make cmake tree"
 MACOS_PKGS="stow gh sbcl tmux wget"
 
@@ -22,6 +22,7 @@ detect_os() {
 }
 
 install_packages_fedora() {
+    dnf copr enable scottames/ghostty
     sudo dnf update -y
     sudo dnf install -y $FEDORA_PKGS
 }
@@ -34,6 +35,8 @@ install_packages_arch() {
 install_packages_ubuntu() {
     sudo apt update -y
     sudo apt install -y $UBUNTU_PKGS
+    wget https://github.com/mkasberg/ghostty-ubuntu/releases/download/1.2.2-0-ppa1/ghostty_1.2.2-0.ppa1_amd64_24.04.deb
+    sudo apt install -y ghostty_1.2.2-0.ppa1_amd64_24.04.deb
 }
 
 install_packages_macos() {
