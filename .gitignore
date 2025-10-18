@@ -1,0 +1,19 @@
+# IDE
+.DS_Store
+.idea
+*.log
+tmp/
+*.dev
+*~
+*#*
+
+# Libraries
+*.so
+*.dylib
+
+# Lisp
+*.fasl
+*.lx64fsl
+
+# Binaries
+*.exe

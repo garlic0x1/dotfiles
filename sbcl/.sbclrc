@@ -1,0 +1,24 @@
+; -*- mode: Lisp;-*-
+
+(asdf:initialize-source-registry
+ `(:source-registry
+   (:tree "~/git/")
+   (:tree "~/coalton/")
+   (:tree "~/common-lisp/")
+   :inherit-configuration))
+
+(defun clear-cache ()
+  (uiop:delete-directory-tree
+   asdf:*user-cache*
+   :if-does-not-exist :ignore
+   :validate t))
+
+(defun install-quicklisp ()
+  (load "~/.quicklisp.lisp") 
+  (quicklisp-quickstart:install))
+
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname))))
+  (if (probe-file quicklisp-init)
+      (load quicklisp-init)
+      (format t "~&;; Quicklisp is not installed~%;; Run (install-quicklisp) if you want it.~%")))
