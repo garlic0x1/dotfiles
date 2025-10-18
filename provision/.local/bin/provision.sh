@@ -2,10 +2,10 @@
 
 set -e
 
-FEDORA_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-devel gcc make cmake tree ghostty"
-ARCH_PKGS="stow git github-cli sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree ghostty"
-UBUNTU_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-dev gcc make cmake tree"
-MACOS_PKGS="stow gh sbcl tmux wget"
+FEDORA_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-devel gcc make cmake tree ghostty nvim"
+ARCH_PKGS="stow git github-cli sbcl zsh emacs tmux curl wget libvterm gcc make cmake tree ghostty nvim"
+UBUNTU_PKGS="stow git gh sbcl zsh emacs tmux curl wget libvterm-dev gcc make cmake tree nvim"
+MACOS_PKGS="stow gh sbcl tmux wget nvim"
 
 detect_os() {
     if [ "$(uname)" = "Darwin" ]; then
@@ -22,7 +22,7 @@ detect_os() {
 }
 
 install_packages_fedora() {
-    sudo dnf copr enable scottames/ghostty -y || true
+    sudo dnf copr enable scottames/ghostty -y
     sudo dnf update -y
     sudo dnf install -y $FEDORA_PKGS
 }

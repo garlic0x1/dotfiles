@@ -30,5 +30,8 @@ PROMPT='${NEWLINE}%F{green}%*%f %F{blue}%~%f %F{red}${vcs_info_msg_0_}%f${NEWLIN
 
 export PATH=~/.local/bin/:$PATH
 
+export EDITOR=nvim
+export VISUAL=nvim
+
 # Dedupe $PATH
 typeset -U PATH

@@ -17,3 +17,6 @@ tmp/
 
 # Binaries
 *.exe
+
+# Private
+nvim/.config/
