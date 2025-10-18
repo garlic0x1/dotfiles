@@ -22,7 +22,7 @@ detect_os() {
 }
 
 install_packages_fedora() {
-    dnf copr enable scottames/ghostty
+    sudo dnf copr enable scottames/ghostty -y || true
     sudo dnf update -y
     sudo dnf install -y $FEDORA_PKGS
 }
