@@ -180,11 +180,15 @@
 (if (display-graphic-p)
     (use-package auto-dark
       :ensure t
-      :config
-      (setq auto-dark-allow-osascript t)
-      (setq custom-safe-themes t)
-      (setq auto-dark-dark-theme 'modus-vivendi-tinted)
-      (setq auto-dark-light-theme 'modus-operandi-tinted)
+      :hook
+      ((auto-dark-dark-mode
+        . (lambda () (modus-themes-select 'modus-vivendi-tinted)))
+       (auto-dark-light-mode
+        . (lambda () (modus-themes-select 'modus-operandi-tinted))))
+      :custom
+      (custom-safe-themes t)
+      (auto-dark-allow-osascript t)
+      :init
       (auto-dark-mode 1))
   (load-theme 'modus-vivendi))
 
