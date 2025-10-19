@@ -53,6 +53,7 @@ require("lazy").setup({
       require("conform").setup({
         formatters_by_ft = {
           lua = { "stylua" },
+          sh = { "shfmt" },
           python = { "black" },
           javascript = { "prettier" },
           typescript = { "prettier" },
@@ -66,6 +67,9 @@ require("lazy").setup({
         formatters = {
           stylua = {
             prepend_args = { "--indent-type", "Spaces", "--indent-width", "2" },
+          },
+          shfmt = {
+            prepend_args = { "-i=2", "-s" },
           },
         },
         format_on_save = {
