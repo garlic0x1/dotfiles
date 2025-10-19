@@ -1,14 +1,16 @@
 # Make
 
-`make stow` - stow all modules
+`make stow` - Stow all modules
 
-`make unstow` - unstow all modules
+`make unstow` - Unstow all modules
+
+`make tree` - Print module overview
 
 # Modules 
 
 ## Emacs
 
-[evil](https://github.com/emacs-evil/evil) config for Lisp development, plugins managed by [elpaca](https://github.com/progfolio/elpaca)
+[Evil](https://github.com/emacs-evil/evil) config for Lisp development, plugins managed by [Elpaca](https://github.com/progfolio/elpaca)
 
 ## Fonts
 
@@ -20,11 +22,11 @@ Simple config with Modus themes
 
 ## Neovim
 
-Modus themes and a few extras, plugins managed with [lazy](https://github.com/folke/lazy.nvim)
+Modus themes and a few extras, plugins managed with [Lazy](https://github.com/folke/lazy.nvim)
 
 ## Provision
 
-Script for setting up new Linux machines, installs [ghostty](https://ghostty.org/), [Brave](https://brave.com), and sets some keybindings
+Script for setting up new Linux machines, installs [Ghostty](https://ghostty.org/), [Brave](https://brave.com), and sets some keybindings
 
 ## SBCL 
 
