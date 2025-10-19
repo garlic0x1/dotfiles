@@ -1,24 +1,16 @@
+# Emacs Mode
+bindkey -e
+
+# Save History
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 
+# Tab Completion
 zstyle :compinstall filename '$HOME/.zshrc'
 autoload -Uz compinit
 compinit
 setopt globdots
-
-bindkey -e
-
-# set -o vi
-# bindkey '^[p' up-line-or-search
-# bindkey '^[n' down-line-or-search
-
-# Git Completion
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  autoload -Uz compinit
-  compinit
-fi
 
 # Fancy Prompt
 NEWLINE=$'\n'
@@ -28,8 +20,8 @@ zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
 PROMPT='${NEWLINE}%F{green}%*%f %F{blue}%~%f %F{red}${vcs_info_msg_0_}%f${NEWLINE}λ '
 
+# Custom Variables
 export PATH=~/.local/bin/:$PATH
-
 export EDITOR=nvim
 export VISUAL=nvim
 
