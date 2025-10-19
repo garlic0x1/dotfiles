@@ -70,6 +70,7 @@ install_packages() {
 }
 
 extras_linux() {
+  chsh -s $(which zsh)
   gsettings set \
     org.gnome.desktop.input-sources xkb-options \
     "['caps:ctrl_modifier', 'altwin:swap_alt_win']" ||

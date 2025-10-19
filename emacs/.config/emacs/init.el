@@ -181,9 +181,11 @@
     (use-package auto-dark
       :ensure t
       :config
-      (setq auto-dark-dark-theme 'modus-vivendi-tinted
-            auto-dark-light-theme 'modus-operandi-tinted)
-      (auto-dark-mode))
+      (setq auto-dark-allow-osascript t)
+      (setq custom-safe-themes t)
+      (setq auto-dark-dark-theme 'modus-vivendi-tinted)
+      (setq auto-dark-light-theme 'modus-operandi-tinted)
+      (auto-dark-mode 1))
   (load-theme 'modus-vivendi))
 
 (when (display-graphic-p)
@@ -486,17 +488,3 @@
 
 (custom-emulation-mode)
 (custom-mode)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("e36b78ef2b29a76c8487061af440de56e2b8481e6c9ef8cdc2a72cfd9d2475d2" "0592f1b03ba5d7d8cfade2ce3a23db4c0d5f9926c9ae918dd740739dd95b697c" default)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

@@ -32,6 +32,12 @@ require("lazy").setup({
   },
 
   {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = true,
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     branch = "master",
     lazy = false,
