@@ -147,7 +147,7 @@
 (use-package consult
   :ensure t
   :bind (("C-x C-b" . consult-buffer)
-         ("C-x C-g" . consult-grep)))
+         ("C-x C-g" . consult-ripgrep)))
 
 (use-package swiper
   :ensure t
@@ -173,9 +173,6 @@
 
 (use-package modus-themes
   :ensure t)
-
-;; (use-package ef-themes
-;;   :ensure t)
 
 (if (display-graphic-p)
     (use-package auto-dark
@@ -210,6 +207,17 @@
 
 (use-package clhs
   :ensure t)
+
+(use-package rustic
+  :ensure t
+  :hook (rustic-mode . hungry-delete-mode)
+  :custom
+  (rustic-analyzer-command
+   (if (file-exists-p "~/.cargo/bin/rust-analyzer")
+       '("~/.cargo/bin/rust-analyzer")
+       '("rust-analyzer")))
+  :config
+  (setq rustic-lsp-client 'eglot))
 
 (use-package icicles
   :ensure (:host github :repo "emacsmirror/icicles"))
@@ -478,6 +486,9 @@
   "Custom keybindings."
   :global t :keymap custom-keymap)
 
+(custom-emulation-mode)
+(custom-mode)
+
 ;;--------;;
 ;; Extras ;;
 ;;--------;;
@@ -489,6 +500,3 @@
 ;;-------------;;
 ;; Auto Config ;;
 ;;-------------;;
-
-(custom-emulation-mode)
-(custom-mode)
