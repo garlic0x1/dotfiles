@@ -88,7 +88,9 @@
 
 (use-package hungry-delete
   :ensure t
-  :hook (smartparens-strict-mode . hungry-delete-mode)
+  :hook ((smartparens-strict-mode . hungry-delete-mode)
+         (rustic-mode . hungry-delete-mode)
+         (python-mode . hungry-delete-mode))
   :config (setq hungry-delete-join-reluctantly t))
 
 (setq evil-want-keybinding nil)
@@ -147,7 +149,9 @@
 (use-package consult
   :ensure t
   :bind (("C-x C-b" . consult-buffer)
-         ("C-x C-g" . consult-ripgrep)))
+         ("C-x C-g" . consult-ripgrep)
+         ("C-x C-h" . consult-ripgrep-here)
+         ("C-x C-d" . consult-ripgrep-where)))
 
 (use-package swiper
   :ensure t
@@ -210,7 +214,6 @@
 
 (use-package rustic
   :ensure t
-  :hook (rustic-mode . hungry-delete-mode)
   :custom
   (rustic-analyzer-command
    (if (file-exists-p "~/.cargo/bin/rust-analyzer")
@@ -314,24 +317,21 @@
 
 (global-auto-revert-mode 1)
 
-;;----------------;;
-;; Andrzej Indent ;;
-;;----------------;;
-
-;; (setq lisp-indent-function 'sly-common-lisp-indent-function)
-
-;; (sly-define-common-lisp-style "more-modern"
-;;  "A good general purpose style based on modern but less dogmatic."
-;;  (:inherit "modern")
-;;  (:variables
-;;   (sly-lisp-loop-body-forms-indentation 0) ; <~ was AAF
-;;   (sly-lisp-loop-indent-subclauses t))) ; <~ reenable
-
-;; (setq sly-common-lisp-style-default "more-modern")
-
 ;;----------;;
 ;; Commands ;;
 ;;----------;;
+
+(defun consult-ripgrep-here ()
+  "Run `consult-ripgrep' from the current directory."
+  (interactive)
+  (consult-ripgrep
+   (directory-file-name default-directory)))
+
+(defun consult-ripgrep-where ()
+  "Run `consult-ripgrep' from the specified directory."
+  (interactive)
+  (consult-ripgrep
+   (read-directory-name "Where: ")))
 
 (defun close-saved-buffers ()
   "Utility to clean up all the buffers I accumulate."
