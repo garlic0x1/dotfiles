@@ -89,8 +89,7 @@
 (use-package hungry-delete
   :ensure t
   :hook ((smartparens-strict-mode . hungry-delete-mode)
-         (rustic-mode . hungry-delete-mode)
-         (python-mode . hungry-delete-mode))
+         (rustic-mode . hungry-delete-mode))
   :config (setq hungry-delete-join-reluctantly t))
 
 (setq evil-want-keybinding nil)
@@ -151,7 +150,8 @@
   :bind (("C-x C-b" . consult-buffer)
          ("C-x C-g" . consult-ripgrep)
          ("C-x C-h" . consult-ripgrep-here)
-         ("C-x C-d" . consult-ripgrep-where)))
+         ("C-x C-d" . consult-ripgrep-where)
+         ("C-x C-v" . consult-vterm)))
 
 (use-package swiper
   :ensure t
@@ -195,7 +195,23 @@
 
 (when (display-graphic-p)
   (use-package vterm
-    :ensure t))
+    :ensure t
+    :init
+    (setq consult-source-vterm-buffer
+          `( :name "VTerm Buffer"
+             :hidden nil
+             :category buffer
+             :face consult-buffer
+             :history buffer-name-history
+             :state ,#'consult--buffer-state
+             :items
+             ,(lambda ()
+                (consult--buffer-query
+                 :sort 'visibility
+                 :as #'consult--buffer-pair
+                 :predicate
+                 (lambda (buf)
+                   (eq 'vterm-mode (buffer-local-value 'major-mode buf)))))))))
 
 (use-package sly
   :ensure t
@@ -218,9 +234,18 @@
   (rustic-analyzer-command
    (if (file-exists-p "~/.cargo/bin/rust-analyzer")
        '("~/.cargo/bin/rust-analyzer")
-       '("rust-analyzer")))
+     '("rust-analyzer")))
   :config
   (setq rustic-lsp-client 'eglot))
+
+(use-package python-mode
+  :custom
+  (python-shell-dedicated 'buffer)
+  (python-shell-interpreter "uv")
+  (python-shell-interpreter-args "run python -i")
+  (python-check-command "uv run ruff check")
+  :bind (("C-c C-c" . python-shell-send-defun)
+         ("C-c C-k" . python-shell-send-buffer)))
 
 (use-package icicles
   :ensure (:host github :repo "emacsmirror/icicles"))
@@ -278,6 +303,7 @@
 (setq js-indent-level 2)
 
 (add-hook 'before-save-hook #'(lambda () (when *auto-format* (format-buffer))))
+(add-hook 'after-save-hook #'(lambda () (when *auto-format* (format-buffer-in-place t))))
 
 ;;------------;;
 ;; Appearance ;;
@@ -321,6 +347,19 @@
 ;; Commands ;;
 ;;----------;;
 
+(defun vterm-new ()
+  "Create a new `vterm' buffer."
+  (interactive)
+  (vterm t))
+
+(defun vterm-rename (arg)
+  (interactive "MRename terminal: ")
+  (rename-buffer (format "*vterm-%s*" arg) t))
+
+(defun consult-vterm ()
+  (interactive)
+  (consult-buffer '(consult-source-vterm-buffer)))
+
 (defun consult-ripgrep-here ()
   "Run `consult-ripgrep' from the current directory."
   (interactive)
@@ -337,7 +376,7 @@
   "Utility to clean up all the buffers I accumulate."
   (interactive)
   (cl-flet ((savedp (buf)
-              (when-let ((name (buffer-file-name buf)))
+              (when-let* ((name (buffer-file-name buf)))
                 (and (file-exists-p name)
                      (not (buffer-modified-p buf))))))
     (cl-mapcar #'kill-buffer (cl-remove-if-not #'savedp (buffer-list)))))
@@ -370,7 +409,19 @@
          (indent-buffer)
          (untabify-buffer)
          (delete-trailing-whitespace))
+
         (t nil)))
+
+(defun format-buffer-in-place (&optional no-save-p)
+  "Format files in-place"
+  (interactive)
+  (when no-save-p (save-buffer))
+  (cond ((member major-mode '(python-mode python-ts-mode))
+         (shell-command
+          (format "uv run ruff format %s"
+                  (buffer-file-name (current-buffer)))))
+        (t nil))
+  (revert-buffer nil t))
 
 (defun increase-font-size ()
   "Increase font size by 10 units."
@@ -461,7 +512,9 @@
      ((kbd "C-c C-q") 'indent-buffer)
      ((kbd "M-l q") 'sly-quit-lisp)
      ((kbd "M-l s") 'sly)
+     ((kbd "M-l p") 'run-python)
      ((kbd "M-l v") 'vterm)
+     ((kbd "M-l n") 'vterm-new)
      ((kbd "M-l t") 'ansi-term)
      ((kbd "M-l e") 'eshell)
      ((kbd "M-l m") 'ielm))
