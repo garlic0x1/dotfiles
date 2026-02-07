@@ -1,3 +1,21 @@
+;;-------------------;;
+;; Setup use-package ;;
+;;-------------------;;
+
+(require 'package)
+
+(package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+
+(setq use-package-always-ensure nil)
+
 ;;--------------;;
 ;; Early Extras ;;
 ;;--------------;;
@@ -5,52 +23,6 @@
 (let* ((extras-dir (concat user-emacs-directory "early-extras"))
        (extras-files (ignore-errors (directory-files extras-dir t "^.*\\.el$"))))
   (dolist (file extras-files) (load file)))
-
-;;--------------;;
-;; Setup elpaca ;;
-;;--------------;;
-
-(defvar elpaca-installer-version 0.11)
-(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1 :inherit ignore
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (<= emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                  ,@(when-let* ((depth (plist-get order :depth)))
-                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                  ,(plist-get order :repo) ,repo))))
-                  ((zerop (call-process "git" nil buffer t "checkout"
-                                        (or (plist-get order :ref) "--"))))
-                  (emacs (concat invocation-directory invocation-name))
-                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                  ((require 'elpaca))
-                  ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
-(add-hook 'after-init-hook #'elpaca-process-queues)
-(elpaca `(,@elpaca-order))
-
-(elpaca elpaca-use-package
-  (elpaca-use-package-mode))
 
 ;;----------;;
 ;; Packages ;;
@@ -410,22 +382,25 @@
 (defun format-buffer ()
   "Remove trailing space, indent, and untabify buffer."
   (interactive)
-  (cond ((member major-mode '(lisp-mode emacs-lisp-mode c-mode sly-mrepl-mode))
-         (indent-buffer)
-         (untabify-buffer)
-         (delete-trailing-whitespace))
+  (cond
+   ((member major-mode '(lisp-mode emacs-lisp-mode c-mode sly-mrepl-mode))
+    (indent-buffer)
+    (untabify-buffer)
+    (delete-trailing-whitespace))
 
-        (t nil)))
+   (t nil)))
 
 (defun format-buffer-in-place (&optional no-save-p)
   "Format files in-place"
   (interactive)
   (when no-save-p (save-buffer))
-  (cond ((member major-mode '(python-mode python-ts-mode))
-         (shell-command
-          (format "uv run ruff format %s"
-                  (buffer-file-name (current-buffer)))))
-        (t nil))
+  (cond
+   ((member major-mode '(python-mode python-ts-mode))
+    (shell-command
+     (format "uv run ruff format %s"
+             (buffer-file-name (current-buffer)))))
+
+   (t nil))
   (revert-buffer nil t))
 
 (defun increase-font-size ()
@@ -527,8 +502,7 @@
   (let ((map (make-sparse-keymap)))
     (define-keys
      map
-     ((kbd "C-w d") 'evil-goto-definition)
-     )
+     ((kbd "C-w d") 'evil-goto-definition))
     map))
 
 (define-minor-mode custom-emulation-mode
