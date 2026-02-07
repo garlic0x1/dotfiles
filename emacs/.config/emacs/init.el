@@ -178,6 +178,9 @@
 (use-package modus-themes
   :ensure t)
 
+(use-package doom-themes
+  :ensure t)
+
 (if (display-graphic-p)
     (use-package auto-dark
       :ensure t
@@ -326,14 +329,16 @@
 ;; Misc ;;
 ;;------;;
 
-;; (setq debug-on-error t)
+;; don't append custom parameters to this file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file :noerror)
 
 ;; get rid of plugin warnings
 (setq warning-minimum-level :emergency)
 
 ;; fancy scrolling
 (setq scroll-conservatively 101)
-(setq scroll-margin 3)
+(setq scroll-margin 2)
 
 ;; overflowing long lines
 (setq-default truncate-lines t)
@@ -341,7 +346,7 @@
 ;; too many direds
 (setq dired-kill-when-opening-new-dired-buffer t)
 
-(global-auto-revert-mode 1)
+(global-auto-revert-mode t)
 
 ;;----------;;
 ;; Commands ;;
@@ -486,8 +491,6 @@
 (define-key emacs-lisp-mode-map (kbd "C-c C-c") 'eval-last-sexp)
 (define-key emacs-lisp-mode-map (kbd "C-c C-k") 'eval-buffer)
 
-;; (setf ns-command-modifier 'meta)
-
 (cl-defmacro define-keys (keymap &body bindings)
   `(progn ,@(mapcar
              (lambda (binding)
@@ -549,7 +552,3 @@
 (let* ((extras-dir (concat user-emacs-directory "extras"))
        (extras-files (ignore-errors (directory-files extras-dir t "^.*\\.el$"))))
   (dolist (file extras-files) (load file)))
-
-;;-------------;;
-;; Auto Config ;;
-;;-------------;;
