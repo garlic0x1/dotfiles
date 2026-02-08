@@ -168,7 +168,7 @@
       (auto-dark-allow-osascript t)
       :init
       (auto-dark-mode 1))
-  (load-theme 'modus-vivendi))
+  (load-theme 'modus-vivendi t))
 
 (when (display-graphic-p)
   (use-package vterm
@@ -224,9 +224,6 @@
   :bind (("C-c C-c" . python-shell-send-defun)
          ("C-c C-k" . python-shell-send-buffer)))
 
-(use-package icicles
-  :ensure (:host github :repo "emacsmirror/icicles"))
-
 (use-package web-mode
   :ensure t
   :hook ((html-mode . web-mode))
@@ -246,6 +243,11 @@
     :config
     (git-gutter:start-update-timer)
     (global-git-gutter-mode 1)))
+
+(when (not (display-graphic-p))
+  (use-package clipetty
+    :ensure t
+    :hook (after-init . global-clipetty-mode)))
 
 ;;-----;;
 ;; Org ;;
