@@ -6,4 +6,7 @@ font-size=16
 
 window-padding-x=4
 
+link-url=true
+link-previews=true
+
 theme=light:modus-operandi-tinted,dark:modus-vivendi-tinted

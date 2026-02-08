@@ -332,10 +332,12 @@
   (vterm t))
 
 (defun vterm-rename (arg)
+  "Rename current `vterm' buffer."
   (interactive "MRename terminal: ")
   (rename-buffer (format "*vterm-%s*" arg) t))
 
 (defun consult-vterm ()
+  "Consult all `vterm' buffers."
   (interactive)
   (consult-buffer '(consult-source-vterm-buffer)))
 
