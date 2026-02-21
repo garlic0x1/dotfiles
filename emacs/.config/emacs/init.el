@@ -155,20 +155,19 @@
 (use-package doom-themes
   :ensure t)
 
-(if (display-graphic-p)
-    (use-package auto-dark
-      :ensure t
-      :hook
-      ((auto-dark-dark-mode
-        . (lambda () (modus-themes-select 'modus-vivendi-tinted)))
-       (auto-dark-light-mode
-        . (lambda () (modus-themes-select 'modus-operandi-tinted))))
-      :custom
-      (custom-safe-themes t)
-      (auto-dark-allow-osascript t)
-      :init
-      (auto-dark-mode 1))
-  (load-theme 'modus-vivendi t))
+(when (display-graphic-p)
+  (use-package auto-dark
+    :ensure t
+    :hook
+    ((auto-dark-dark-mode
+      . (lambda () (modus-themes-select 'modus-vivendi-tinted)))
+     (auto-dark-light-mode
+      . (lambda () (modus-themes-select 'modus-operandi-tinted))))
+    :custom
+    (custom-safe-themes t)
+    (auto-dark-allow-osascript t)
+    :init
+    (auto-dark-mode 1)))
 
 (when (display-graphic-p)
   (use-package vterm
@@ -337,6 +336,13 @@
   "Rename current `vterm' buffer."
   (interactive "MRename terminal: ")
   (rename-buffer (format "*vterm-%s*" arg) t))
+
+(defun vterm-kill-ssh ()
+  "Force kill SSH connection."
+  (interactive)
+  (vterm-send-return)
+  (vterm-send-key "~")
+  (vterm-send-key "."))
 
 (defun consult-vterm ()
   "Consult all `vterm' buffers."
